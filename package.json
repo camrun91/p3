@@ -1,0 +1,17 @@
+{
+  "name": "nj06-onlinestore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "eslint": "^4.17.0",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6"
+  }
+}
