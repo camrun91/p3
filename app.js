@@ -108,6 +108,14 @@ app.post('/upload',(req, res)=>{
     })
 })
 
+app.get('/store', (req, res)=>{
+    Book.find({}, (err, results) => {
+		if (err) {
+			return res.render.status(500).send('<h1>Error: cannot read from db</h1>')
+		}
+        return res.render('store', {results, msg: null})
+	})
+})
 // "add" button is pressed to add to ShoppingCart
 app.post('/add', (req, res) => {
 	const book_id = req.body.id;
@@ -119,7 +127,7 @@ app.post('/add', (req, res) => {
         req.session.shoppingcart = new ShoppingCart().serialize();
     }
     const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
-    const book = books_db.find(book_id);
+    const book = book.find(book_id);
     //console.log('book', book);
     shoppingcart.add(book);
     req.session.shoppingcart = shoppingcart.serialize();
@@ -142,7 +150,7 @@ app.get('/checkout', (req, res) => {
 });
 
 app.get('/delete', (req, res) => {
-	Book.remove({name: req.query.filename}, (err, results) => {
+	Book.remove({image: req.query.filename}, (err, results) => {
 		if (err) {
 			return res.status(500).send('<h1>Image Delete error</h1>');
         }

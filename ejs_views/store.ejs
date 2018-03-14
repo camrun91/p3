@@ -1,24 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head><title><%= store_title %></title></head>
+    <head> 
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+        <title><%= store_title %></title>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/admin">Admin</a>
+                <a class="nav-item nav-link" href="/upload">Upload</a>
+                <a class="nav-item nav-link active" href="/store">Store Front</a>
+              </div>
+            </div>
+          </nav>
+    </head>
     <body>
+        
+        <%- msg ? `<div class="alert alert-danger" role="alert">${msg}</div>` : '' %>
         <h1>Welcome to <%= store_title %>!</h1>
-
-        <table>
-            <% for (const book of books_db.books) { %>
-            <tr>
-                <td> <%= book.title %> </td>
-                <td> <%= book.author %> </td>
-                <td> <%= book.price %> </td>
-                <td> <img src='<%= book.image_path %>' width=100 height=100> </td>
-                <td>
-                    <form action='/add' method='post'>
-                        <input type='hidden' name='id' value='<%= book.id %>'>
-                        <input type='submit' value='Add to Cart'>
-                    </form>
-                </td>
-            </tr>
-            <% } %>
+        <% if (results) { %>
+        <table class="table table-striped">
+            <thead>
+             <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Author</th>
+                <th scope="col">Price</th>
+                <th scope="col">Image</th>
+             </tr>
+            </thead>
+            <tbody>
+                <% for (const image of results) { %>
+                    <tr>
+                        <td><%= image.title %></td>
+                        <td><%= image.author %></td>
+                        <td><%= image.price %></td>
+                        <td><img src="<%= image.image %>" class="rounded-circle" width=150 height=150></td>
+                        <td>
+                            <form action='/add' method='post'>
+                                <input type='hidden' name='id' value='<%= image.id %>'>
+                                <input type='submit' value='Add to Cart'>
+                            </form>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
         </table>
+        <% } %>
     </body>
 </html>
