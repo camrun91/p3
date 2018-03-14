@@ -1,13 +1,48 @@
-// minimalistic online store: no real database, no authentication
+const express = require('express')
+const session = require('express-session')
+const multer = require('multer')
+const ejs = require('ejs')
+const path = require('path')
+const fs = require('fs')
 
-const express = require('express');
-const session = require('express-session');
+const uploadImagePrefix = 'image-';
+const uploadDir = './public/uploads';
+//Storage options for Multer are set below.
+const storageOptions = multer.diskStorage({
+    destination: (req, file, callback) => {
+        // upload dir path
+        callback(null, uploadDir);
+    },
+    filename: (req, file, callback) => {
+        callback(null, uploadImagePrefix + Date.now()
+            + path.extname(file.originalname));
+    }
+})
 
-const app = express();
-app.set('view engine', 'ejs');
-app.set('views', './ejs_views');
+const MAX_FILESIZE = 1024 * 1024 * 3; // 3 MB
+const fileTypes = /jpeg|jpg|png|gif/ //These are the accepted file types.
 
-app.use('/images', express.static(__dirname+'/data/images'));
+//configure Multer
+const upload = multer({
+    storage: storageOptions,
+    limits: {
+        fileSize: MAX_FILESIZE
+    }, 
+    fileFilter: (req, file, callback) => {
+        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = fileTypes.test(file.mimetype);
+        if (mimetype && extname) {
+            return callback(null, true);
+        } else {
+            return callback('Error: Images only');
+        }
+    }
+}).single('imageUpload'); // parameter name at <form> of index.ejs
+
+const app = express()
+app.set('view engine', 'ejs')
+app.set('views', './ejs_views')
+app.use('/public', express.static(__dirname + '/public'));
 app.use(express.urlencoded({extended: false}));
 app.use(session({
 	secret: 'mysecretkey',
@@ -19,9 +54,8 @@ app.use(session({
     }
 }));
 
-const books_db = require('./data/books_db');
 const ShoppingCart = require('./models/ShoppingCart');
-const Book = require('./models/Book');
+const Book = require('./models/BookSchema');
 app.locals.store_title = 'MyBroncho Online';
 
 // session can hold only serializable data
@@ -30,8 +64,17 @@ app.get('/', (req, res) => {
     if (!req.session.shoppingcart) {
         req.session.shoppingcart = new ShoppingCart().serialize();
     }
-    res.render('index', {books_db});
+    res.render('index');
 });
+
+app.get('/admin', (req, res) =>{
+    Book.find({}, (err, results) => {
+		if (err) {
+			return res.render.status(500).send('<h1>Error: cannot read from db</h1>')
+		}
+        return res.render('admin', {results, msg: null})
+	})
+})
 
 // "add" button is pressed to add to ShoppingCart
 app.post('/add', (req, res) => {
