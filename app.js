@@ -93,7 +93,10 @@ app.post('/upload',(req, res)=>{
         }
           // save filename and size in the db
           const newBook = new Book({
-            name: uploadDir + '/' + req.file.filename,
+            title: req.body.title,
+            author: req.body.authors,
+            price: req.body.price,
+            image: uploadDir + '/' + req.file.filename
           //  title: res.body.
         });
         newBook.save((err, results) => {
@@ -138,6 +141,21 @@ app.get('/checkout', (req, res) => {
     res.send(`<h1>${message}</h1>`);
 });
 
+app.get('/delete', (req, res) => {
+	Book.remove({name: req.query.filename}, (err, results) => {
+		if (err) {
+			return res.status(500).send('<h1>Image Delete error</h1>');
+        }
+        // delete the file from the /public/uploads directory
+        fs.unlink(req.query.filename, (err) => {
+            if (err) {
+                // what should I do?
+                throw err;
+            }
+        });
+        res.redirect('/');
+	});
+});
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log('Server started at port', port);

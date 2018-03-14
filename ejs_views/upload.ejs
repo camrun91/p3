@@ -33,14 +33,14 @@
                          <div class="input-group-prepend">
                             <span class="input-group-text">Title</span>
                          </div>
-                         <input type="text" class="form-control" placeholder="Title" aria-label="Title" aria-describedby="basic-addon1">
+                         <input type="text" name="title" class="form-control" placeholder="Title" aria-label="Title" aria-describedby="basic-addon1">
                     </div>
                             
                     <div class="input-group">
                         <div class="input-group-prepend">
                              <span class="input-group-text">Authors</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Author" aria-label="Author" aria-describedby="basic-addon1">
+                        <input type="text" name="authors" class="form-control" placeholder="Author" aria-label="Author" aria-describedby="basic-addon1">
                     </div>
                             
                     <div class="input-group">
@@ -48,19 +48,16 @@
                             <span class="input-group-text">$</span>
                             <span class="input-group-text">0.00</span>
                         </div>
-                        <input type="text" class="form-control" aria-label="Price">
+                        <input type="text" name="price" class="form-control" aria-label="Price">
                          </div>
 
                      <div class="input-group">
                         <label for="fileuploadbtn">Click to upload an image file</label>
-
-                <input type="file" name="imageUpload" class="form-control-file" id="fileuploadbtn">
-
-            </div>
+                        <input type="file" name="imageUpload" class="form-control-file" id="fileuploadbtn">
                     </div>
-                    <button type="submit" class="btn btn-primary">Insert</button>          
+                    <button type="submit" class="btn btn-primary">Insert</button>
                 </form>
-        </div> <!-- jumbotron -->
+        </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
