@@ -76,6 +76,10 @@ app.get('/admin', (req, res) =>{
 	})
 })
 
+app.get('/upload', (req, res) =>{
+    res.render('upload')
+})
+
 // "add" button is pressed to add to ShoppingCart
 app.post('/add', (req, res) => {
 	const book_id = req.body.id;
