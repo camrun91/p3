@@ -80,6 +80,31 @@ app.get('/upload', (req, res) =>{
     res.render('upload')
 })
 
+app.post('/upload',(req, res)=>{
+    upload(req, res, (err) =>{
+        if (err) {
+            return res.render('admin', {
+                results: null, msg: err, filename: null });
+        }
+        if (!req.file) {
+            return res.render('index', {
+                results: null, msg: 'Error: no file selected', filename: null
+            });
+        }
+          // save filename and size in the db
+          const newBook = new Book({
+            name: uploadDir + '/' + req.file.filename,
+          //  title: res.body.
+        });
+        newBook.save((err, results) => {
+            if (err) {
+                return res.status(500).send('<h1>save() in db error</h1>', err);
+            }
+            return res.redirect('/');
+        });
+    })
+})
+
 // "add" button is pressed to add to ShoppingCart
 app.post('/add', (req, res) => {
 	const book_id = req.body.id;
