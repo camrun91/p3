@@ -7,7 +7,7 @@ const bookSchema = new Schema({
     title: String,
     author: String,
     image: String,
-    price: Number
+    price: String
 });
 
 module.exports = mongoose.model('books', bookSchema);

@@ -7,7 +7,7 @@ class ShoppingCart {
     serialize() {
         let serial = [];
         for (const item of this.cart) {
-            serial.push({book: item.book.serialize(), qty: item.qty});
+            serial.push({title: item.title, author: item.author, price: item.price, image: item.image, qty: item.qty});
         }
         return serial;
     }
@@ -20,22 +20,24 @@ class ShoppingCart {
     }
     deserial_additem(item) { // {book, qty}
         this.cart.push(
-            {book: new Book(item.book), qty: item.qty}
+            {title: item.title, author: item.author, price: item.price, image: item.image, qty: item.qty}
         );
     }
     add(book) {
         for (const item of this.cart) {
-            if (item.book.id == book.id) {
+            if (item.title == book.title) {
                 item.qty++;
                 return;
             }
         }
-        this.cart.push({book: book, qty: 1});
+        for (const item of book) {
+        this.cart.push({title: item.title, author: item.author, price: item.price, image: item.image, qty: 1});
+        }
     }
     get totalPrice() {
         let total = 0;
         for (const item of this.cart) {
-            total += item.book.price * item.qty;
+            total += item.price * item.qty;
         }
         return total;
     }

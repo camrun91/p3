@@ -118,21 +118,21 @@ app.get('/store', (req, res)=>{
 })
 // "add" button is pressed to add to ShoppingCart
 app.post('/add', (req, res) => {
-	const book_id = req.body.id;
-	if (!book_id) {
-		// for some reason, not came via "add" button of index.ejs
-		res.redirect('/');
-	}
-    if (!req.session.shoppingcart) {
-        req.session.shoppingcart = new ShoppingCart().serialize();
-    }
-    const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
-    const book = book.find(book_id);
-    //console.log('book', book);
-    shoppingcart.add(book);
-    req.session.shoppingcart = shoppingcart.serialize();
-    //console.log('sc', req.session.shoppingcart);
-    res.render('shoppingcart', {shoppingcart});
+    Book.find({'_id': req.body.id}, (err, results) => {
+        if (err) {
+			return res.render.status(500).send('<h1>Error: cannot read from db</h1>')
+        }
+        if (!req.session.shoppingcart) {
+            req.session.shoppingcart = new ShoppingCart().serialize();
+        }
+        const shoppingcart = ShoppingCart.deserialize(req.session.shoppingcart);
+        const book = results;
+        //console.log('book', book);
+        shoppingcart.add(book);
+        req.session.shoppingcart = shoppingcart.serialize();
+        //console.log('sc', req.session.shoppingcart);
+        res.render('shoppingcart', {shoppingcart});
+    });
 });
 
 app.get('/checkout', (req, res) => {
